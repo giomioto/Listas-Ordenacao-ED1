@@ -362,91 +362,123 @@ void salvarListaSeq(ListaClientes *lista)
     printf("Lista de clientes salva com sucesso no arquivo 'clientes.txt'.\n");
 }
 
-void selectionSort(ListaClientes *lista)
+void selectionSort(ListaClientes *lista, int *comparacoesSeq, int *copiasRealizadasSeq)
 {
+    (*comparacoesSeq) = 0;
+    (*copiasRealizadasSeq) = 0;
     int i, j, k;
     Cliente temp;
 
-    for (i = 0; i < lista->quantidade; i++)
+    for (i = 0; i < lista->quantidade; i++, (*comparacoesSeq)++)
     {
+        (*copiasRealizadasSeq)++;
         k = i;
 
         // Encontra o índice do menor elemento restante
-        for (j = i + 1; j < lista->quantidade; j++)
+        for (j = i + 1; j < lista->quantidade; j++, (*comparacoesSeq)++)
         {
+            (*comparacoesSeq)++;
             if (lista->clientes[j].rg < lista->clientes[k].rg)
             {
+                (*copiasRealizadasSeq)++;
                 k = j;
             }
         }
 
         // Troca o menor elemento encontrado com o primeiro não ordenado
+        (*comparacoesSeq)++;
         if (k != i)
         {
+            (*copiasRealizadasSeq)+=3;
             temp = lista->clientes[i];
             lista->clientes[i] = lista->clientes[k];
             lista->clientes[k] = temp;
         }
     }
+    printf("\n\nC(n):%d, M(n):%d\n\n", (*comparacoesSeq), (*copiasRealizadasSeq));
 }
 
-void insertionSort(ListaClientes *lista)
+void insertionSort(ListaClientes *lista, int *comparacoesSeq, int *copiasRealizadasSeq)
 {
+
+    (*comparacoesSeq) = 0;
+    (*copiasRealizadasSeq) = 0;
     int i, j, k;
     Cliente temp;
 
-    for (i = 1; i < lista->quantidade; i++)
+    for (i = 1; i < lista->quantidade; i++, (*comparacoesSeq)++)
     {
-        for(j = 0; j<i; j++)
+        for(j = 0; j<i; j++, (*comparacoesSeq)++)
         {
+            (*copiasRealizadasSeq)++;
             if(lista->clientes[j].rg > lista->clientes[i].rg)
             {
+                (*copiasRealizadasSeq)+=3;
                 temp = lista->clientes[j];
                 lista->clientes[j] = lista->clientes[i];
                 lista->clientes[i] = temp;
             }
         }
     }
+    printf("\n\nC(n):%d, M(n):%d\n\n", (*comparacoesSeq), (*copiasRealizadasSeq));
 }
 
-void bubbleSort(ListaClientes *lista)
+void bubbleSort(ListaClientes *lista, int *comparacoesSeq, int *copiasRealizadasSeq)
 {
+    (*comparacoesSeq) = 0;
+    (*copiasRealizadasSeq) = 0;
+
     Cliente temp;
     int flag = 1, i;
 
+    (*comparacoesSeq)++;
     while(flag)
     {
+        (*comparacoesSeq)++;
         flag = 0;
-        for (i = 0; i < lista->quantidade-1; i++)
+        for (i = 0; i < lista->quantidade-1; i++, (*comparacoesSeq)++)
         {
+            (*comparacoesSeq)++;
             if(lista->clientes[i].rg > lista->clientes[i+1].rg)
             {
                 flag = 1;
+                (*copiasRealizadasSeq)+=3;
                 temp = lista->clientes[i];
                 lista->clientes[i] = lista->clientes[i+1];
                 lista->clientes[i+1] = temp;
             }
         }
     }
-
+    printf("\n\nC(n):%d, M(n):%d\n\n", (*comparacoesSeq), (*copiasRealizadasSeq));
 }
 
-void shellSort(ListaClientes *lista)
+void shellSort(ListaClientes *lista, int *comparacoesSeq, int *copiasRealizadasSeq)
 {
+    (*comparacoesSeq) = 0;
+    (*copiasRealizadasSeq) = 0;
+
     Cliente temp;
     int i, j, h = 1;
     // Definindo o intervalo inicial h
-    while (h < lista->quantidade / 3)
-        h = 3 * h + 1;
 
+    (*comparacoesSeq)++;
+    while (h < lista->quantidade / 3)
+    {
+        (*comparacoesSeq)++;
+        h = 3 * h + 1;
+    }
+
+    (*comparacoesSeq)++;
     while (h >= 1)
     {
+        (*comparacoesSeq)++;
         // Loop sobre os elementos com intervalo h
-        for (i = h; i < lista->quantidade; i++)
+        for (i = h; i < lista->quantidade; i++, (*comparacoesSeq)++)
         {
             // Inserção dos elementos com comparação dentro do intervalo
-            for (j = i; j >= h && lista->clientes[j - h].rg > lista->clientes[j].rg; j -= h)
+            for (j = i; j >= h && lista->clientes[j - h].rg > lista->clientes[j].rg; j -= h, (*comparacoesSeq)++)
             {
+                (*copiasRealizadasSeq) += 3;
                 temp = lista->clientes[j];
                 lista->clientes[j] = lista->clientes[j - h];
                 lista->clientes[j - h] = temp;
@@ -455,9 +487,10 @@ void shellSort(ListaClientes *lista)
         // Atualização do intervalo h
         h /= 2;
     }
+    printf("\n\nC(n):%d, M(n):%d\n\n", (*comparacoesSeq), (*copiasRealizadasSeq));
 }
 
-void quickSort(ListaClientes *lista, int iniVet, int fimVet)
+void quickSort(ListaClientes *lista, int iniVet, int fimVet, int *comparacoesSeq, int *copiasRealizadasSeq)
 {
     Cliente temp, pivo;
     int i, j;
@@ -467,20 +500,29 @@ void quickSort(ListaClientes *lista, int iniVet, int fimVet)
 
     pivo = lista->clientes[(iniVet+fimVet)/2];
 
+    (*comparacoesSeq)++;
     while(i<=j)
     {
-
+        (*comparacoesSeq)++;
+        (*comparacoesSeq)++;
         while(lista->clientes[i].rg < pivo.rg)
         {
+            (*comparacoesSeq)++;
+
             i = i + 1;
         }
 
+        (*comparacoesSeq)++;
         while(lista->clientes[j].rg > pivo.rg)
         {
+            (*comparacoesSeq)++;
+            (*copiasRealizadasSeq)++;
             j = j - 1;
         }
+        (*comparacoesSeq)++;
         if(i <= j)
         {
+            (*copiasRealizadasSeq) += 3;
             temp = lista->clientes[i];
             lista->clientes[i] = lista->clientes[j];
             lista->clientes[j] = temp;
@@ -489,47 +531,57 @@ void quickSort(ListaClientes *lista, int iniVet, int fimVet)
         }
 
     }
+    (*comparacoesSeq)++;
     if(j > iniVet)
     {
-        quickSort(lista, iniVet, j);
+        quickSort(lista, iniVet, j, comparacoesSeq, copiasRealizadasSeq);
     }
+    (*comparacoesSeq)++;
     if(i < fimVet)
     {
-        quickSort(lista, i, fimVet);
+        quickSort(lista, i, fimVet, comparacoesSeq, copiasRealizadasSeq);
     }
-
 }
 
-void merge(ListaClientes *lista, int esquerda, int meio, int direita)
+void merge(ListaClientes *lista, int esquerda, int meio, int direita, int *comparacoesSeq, int *copiasRealizadasSeq)
 {
     ListaClientes *helper = (ListaClientes*)malloc(sizeof(ListaClientes));
     helper->quantidade = direita - esquerda + 1; // Corrigindo a alocação de memória
     helper->clientes = (Cliente*)malloc(helper->quantidade * sizeof(Cliente));
 
-    for (int i = 0; i < helper->quantidade; i++)
+    for (int i = 0; i < helper->quantidade; i++, (*comparacoesSeq)++)
     {
+        (*copiasRealizadasSeq)++;
         helper->clientes[i] = lista->clientes[esquerda + i];
     }
 
     int i = 0, j = meio - esquerda + 1, k = esquerda;
 
+    (*comparacoesSeq)++;
     while (i <= meio - esquerda && j <= direita - esquerda)
     {
+        (*comparacoesSeq)++;
+        (*comparacoesSeq)++;
         if (helper->clientes[i].rg <= helper->clientes[j].rg)
         {
+            (*copiasRealizadasSeq)++;
             lista->clientes[k] = helper->clientes[i];
             i++;
         }
         else
         {
+            (*copiasRealizadasSeq)++;
             lista->clientes[k] = helper->clientes[j];
             j++;
         }
         k++;
     }
 
+    (*comparacoesSeq)++;
     while (i <= meio - esquerda)
     {
+        (*comparacoesSeq)++;
+        (*copiasRealizadasSeq)++;
         lista->clientes[k] = helper->clientes[i];
         i++;
         k++;
@@ -539,17 +591,18 @@ void merge(ListaClientes *lista, int esquerda, int meio, int direita)
     free(helper);
 }
 
-void mergeSort(ListaClientes *lista, int esquerda, int direita)
+void mergeSort(ListaClientes *lista, int esquerda, int direita, int *comparacoesSeq, int *copiasRealizadasSeq)
 {
+    (*comparacoesSeq)++;
     if (esquerda >= direita)
         return;
 
     int meio = (esquerda + direita) / 2;
 
-    mergeSort(lista, esquerda, meio); // Corrigindo a chamada recursiva
-    mergeSort(lista, meio + 1, direita);
+    mergeSort(lista, esquerda, meio, comparacoesSeq, copiasRealizadasSeq); // Corrigindo a chamada recursiva
+    mergeSort(lista, meio + 1, direita, comparacoesSeq, copiasRealizadasSeq);
 
-    merge(lista, esquerda, meio, direita);
+    merge(lista, esquerda, meio, direita, comparacoesSeq, copiasRealizadasSeq);
 }
 
 
@@ -647,7 +700,7 @@ int main()
             break;
         case 10:
             // Abre um arquivo TEXTO para LEITURA
-            lerListaDeArquivo(lista, &comparacoes, &copiasRealizadas, "NomeRG100M.txt");
+            lerListaDeArquivo(lista, &comparacoes, &copiasRealizadas, "NomeRG10.txt");
             break;
         case 11:
             do
@@ -666,27 +719,33 @@ int main()
                 switch (opcaoOrdenacao)
                 {
                 case 1:
-                    selectionSort(lista);
+                    selectionSort(lista, &comparacoes, &copiasRealizadas);
                     opcaoOrdenacao = 0;
                     break;
                 case 2:
-                    insertionSort(lista);
+                    insertionSort(lista, &comparacoes, &copiasRealizadas);
                     opcaoOrdenacao = 0;
                     break;
                 case 3:
-                    bubbleSort(lista);
+                    bubbleSort(lista, &comparacoes, &copiasRealizadas);
                     opcaoOrdenacao = 0;
                     break;
                 case 4:
-                    shellSort(lista);
+                    shellSort(lista, &comparacoes, &copiasRealizadas);
                     opcaoOrdenacao = 0;
                     break;
                 case 5:
-                    quickSort(lista, 0, lista->quantidade - 1);
+                    comparacoes = 0;
+                    copiasRealizadas = 0;
+                    quickSort(lista, 0, lista->quantidade - 1, &comparacoes, &copiasRealizadas);
+                    printf("\n\nC(n):%d, M(n):%d\n\n", comparacoes, copiasRealizadas);
                     opcaoOrdenacao = 0;
                     break;
                 case 6:
-                    mergeSort(lista, 0, lista->quantidade - 1);
+                    comparacoes = 0;
+                    copiasRealizadas = 0;
+                    mergeSort(lista, 0, lista->quantidade - 1, &comparacoes, &copiasRealizadas);
+                    printf("\n\nC(n):%d, M(n):%d\n\n", comparacoes, copiasRealizadas);
                     opcaoOrdenacao = 0;
                     break;
                 case 0:

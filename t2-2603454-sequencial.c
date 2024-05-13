@@ -603,7 +603,7 @@ void mergeSort(ListaClientes *lista, int esquerda, int direita, int* comparacoes
     (*copiasRealizadas)++;
     int meio = (esquerda + direita) / 2;
 
-    mergeSort(lista, esquerda, meio, comparacoes, copiasRealizadas); // Corrigindo a chamada recursiva
+    mergeSort(lista, esquerda, meio, comparacoes, copiasRealizadas);
     mergeSort(lista, meio + 1, direita, comparacoes, copiasRealizadas);
 
     merge(lista, esquerda, meio, direita, comparacoes, copiasRealizadas);

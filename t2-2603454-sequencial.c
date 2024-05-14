@@ -621,6 +621,8 @@ int main()
     int comparacoesSeq = 0;
     int copiasRealizadasSeq = 0;
     int opcao, opcaoOrdenacao;
+    double tempoProcessamento;
+    clock_t inicio=0, fim=0;
 
     do
     {
@@ -704,7 +706,7 @@ int main()
             break;
         case 10:
             // Abre um arquivo TEXTO para LEITURA
-            lerListaDeArquivo(lista, &comparacoes, &copiasRealizadas, "NomeRG10.txt");
+            lerListaDeArquivo(lista, &comparacoes, &copiasRealizadas, "NomeRG100M.txt");
             break;
         case 11:
             do
@@ -723,37 +725,55 @@ int main()
                 switch (opcaoOrdenacao)
                 {
                 case 1:
+                    inicio = clock();
                     selectionSort(lista, &comparacoes, &copiasRealizadas);
-                    printf("\nC(n): %d, M(N) %d\n", comparacoes, copiasRealizadas);
+                    fim = clock();
+                    tempoProcessamento = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+                    printf("\nC(n): %d, M(N) %d, Tempo: %f\n", comparacoes, copiasRealizadas, tempoProcessamento);
                     opcaoOrdenacao = 0;
                     break;
                 case 2:
+                    inicio = clock();
                     insertionSort(lista, &comparacoes, &copiasRealizadas);
-                    printf("\nC(n): %d, M(N) %d\n", comparacoes, copiasRealizadas);
+                    fim = clock();
+                    tempoProcessamento = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+                    printf("\nC(n): %d, M(N) %d, Tempo: %f\n", comparacoes, copiasRealizadas, tempoProcessamento);
                     opcaoOrdenacao = 0;
                     break;
                 case 3:
+                    inicio = clock();
                     bubbleSort(lista, &comparacoes, &copiasRealizadas);
-                    printf("\nC(n): %d, M(N) %d\n", comparacoes, copiasRealizadas);
+                    fim = clock();
+                    tempoProcessamento = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+                    printf("\nC(n): %d, M(N) %d, Tempo: %f\n", comparacoes, copiasRealizadas, tempoProcessamento);
                     opcaoOrdenacao = 0;
                     break;
                 case 4:
+                    inicio = clock();
                     shellSort(lista, &comparacoes, &copiasRealizadas);
-                    printf("\nC(n): %d, M(N) %d\n", comparacoes, copiasRealizadas);
+                    fim = clock();
+                    tempoProcessamento = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+                    printf("\nC(n): %d, M(N) %d, Tempo: %f\n", comparacoes, copiasRealizadas, tempoProcessamento);
                     opcaoOrdenacao = 0;
                     break;
                 case 5:
+                    inicio = clock();
                     comparacoes = 0;
                     copiasRealizadas = 0;
                     quickSort(lista, 0, lista->quantidade - 1, &comparacoes, &copiasRealizadas);
-                    printf("\nC(n): %d, M(N) %d\n", comparacoes, copiasRealizadas);
+                    fim = clock();
+                    tempoProcessamento = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+                    printf("\nC(n): %d, M(N) %d, Tempo: %f\n", comparacoes, copiasRealizadas, tempoProcessamento);
                     opcaoOrdenacao = 0;
                     break;
                 case 6:
+                    inicio = clock();
                     comparacoes = 0;
                     copiasRealizadas = 0;
                     mergeSort(lista, 0, lista->quantidade - 1, &comparacoes, &copiasRealizadas);
-                    printf("\nC(n): %d, M(N) %d\n", comparacoes, copiasRealizadas);
+                    fim = clock();
+                    tempoProcessamento = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+                    printf("\nC(n): %d, M(N) %d, Tempo: %f\n", comparacoes, copiasRealizadas, tempoProcessamento);
                     opcaoOrdenacao = 0;
                     break;
                 case 0:

@@ -292,6 +292,39 @@ void procurarPorRGSeq(ListaClientes *lista, int rg, int *comparacoesSeq, int *co
         printf("Nome: %s, RG: %d, C(n):%d, M(n): %d, Tempo de execução: %f, P(n): %d\n", lista->clientes[i].nome, lista->clientes[i].rg, *comparacoesSeq, *copiasRealizadasSeq, tempoExecucao, posicao);
     }
 }
+void procurarPorRGBin(ListaClientes *lista, int rg, int *comparacoesSeq, int *copiasRealizadasSeq){
+    clock_t inicio = clock();
+    int esquerda = 0;
+    int direita = lista->quantidade - 1;
+    int meio;
+    int posicao;
+    *comparacoesSeq = 0;
+    *copiasRealizadasSeq = 0;
+
+    (*comparacoesSeq)++;
+    while (esquerda <= direita) {
+        (*copiasRealizadasSeq)++;
+        meio = (esquerda + direita) / 2;
+        (*comparacoesSeq)++;
+        if (lista->clientes[meio].rg == rg) {
+            // Elemento encontrado
+            posicao = calculaPosicaoSeq(lista, rg, comparacoesSeq, copiasRealizadasSeq)+1;
+            clock_t fim = clock();
+            double tempoExecucao = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+
+            printf("Nome: %s, RG: %d, C(n):%d, M(n): %d, Tempo de execução: %f, P(n): %d\n", lista->clientes[meio].nome, lista->clientes[meio].rg, *comparacoesSeq, *copiasRealizadasSeq, tempoExecucao, posicao);
+
+            return;
+        } else if (lista->clientes[meio].rg < rg) {
+            (*comparacoesSeq)++;
+            esquerda = meio + 1;
+        } else {
+            direita = meio - 1;
+        }
+    }
+    // Se chegou aqui, o elemento não está presente na lista
+    printf("Cliente com RG %d não encontrado.\n", rg);
+}
 
 void imprimirListaSeq(ListaClientes *lista, int *comparacoesSeq, int *copiasRealizadasSeq)
 {
@@ -399,7 +432,26 @@ void selectionSort(ListaClientes *lista, int* comparacoes, int* copiasRealizadas
     }
 }
 
-void insertionSort(ListaClientes *lista, int* comparacoes, int* copiasRealizadas)
+void insertionSort(ListaClientes *lista, int* comparacoes, int* copiasRealizadas) {
+	for (int i = 1; i < lista->quantidade; i++, (*comparacoes)++) {
+
+        (*copiasRealizadas)++;
+		int j = i;
+
+		(*comparacoes)++;
+		while (j > 0 && lista->clientes[j].rg < lista->clientes[j-1].rg) {
+            (*comparacoes)++;
+            (*copiasRealizadas)+=3;
+			int aux = lista->clientes[j].rg;
+			lista->clientes[j].rg = lista->clientes[j - 1].rg;
+			lista->clientes[j - 1].rg = aux;
+			j -= 1;
+		}
+
+	}
+}
+
+void insertionSort2(ListaClientes *lista, int* comparacoes, int* copiasRealizadas)
 {
     *comparacoes = 0;
     *copiasRealizadas = 0;
@@ -647,11 +699,12 @@ int main()
         printf("4. Remover do final da lista\n");
         printf("5. Remover do início da lista\n");
         printf("6. Remover da posição N da lista\n");
-        printf("7. Procurar por RG\n");
-        printf("8. Imprimir lista\n");
-        printf("9. Salvar lista em um arquivo\n");
-        printf("10. Ler lista do arquivo\n");
-        printf("11. Ordenar\n");
+        printf("7. Procurar por RG SEQUENCIAL\n");
+        printf("8. Procurar por RG BINARIA\n");
+        printf("9. Imprimir lista\n");
+        printf("10. Salvar lista em um arquivo\n");
+        printf("11. Ler lista do arquivo\n");
+        printf("12. Ordenar\n");
         printf("0. Sair\n");
         printf("Opção: ");
         scanf("%d", &opcao);
@@ -711,17 +764,23 @@ int main()
             procurarPorRGSeq(lista, rg, &comparacoesSeq, &copiasRealizadasSeq);
             break;
         case 8:
+            printf("RG: ");
+            scanf("%d", &rg);
+            printf("\n\nLISTA SEQUENCIAL: \n\n");
+            procurarPorRGBin(lista, rg, &comparacoesSeq, &copiasRealizadasSeq);
+            break;
+        case 9:
             printf("\n\nLISTA SEQUENCIAL: \n\n");
             imprimirListaSeq(lista, &comparacoesSeq, &copiasRealizadasSeq);
             break;
-        case 9:
+        case 10:
             salvarListaSeq(lista);
             break;
-        case 10:
-            // Abre um arquivo TEXTO para LEITURA
-            lerListaDeArquivo(lista, &comparacoes, &copiasRealizadas, "NomeRG100M.txt");
-            break;
         case 11:
+            // Abre um arquivo TEXTO para LEITURA
+            lerListaDeArquivo(lista, &comparacoes, &copiasRealizadas, "NomeRG10K.txt");
+            break;
+        case 12:
             do
             {
                 printf("\nEscolha o método de ordenação:\n");
@@ -747,7 +806,7 @@ int main()
                     break;
                 case 2:
                     inicio = clock();
-                    insertionSort(lista, &comparacoes, &copiasRealizadas);
+                    insertionSort2(lista, &comparacoes, &copiasRealizadas);
                     fim = clock();
                     tempoProcessamento = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
                     printf("\nC(n): %d, M(N) %d, Tempo: %f\n", comparacoes, copiasRealizadas, tempoProcessamento);

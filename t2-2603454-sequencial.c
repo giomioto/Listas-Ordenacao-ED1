@@ -369,6 +369,7 @@ void selectionSort(ListaClientes *lista, int* comparacoes, int* copiasRealizadas
     int i, j, k;
     Cliente temp;
 
+    //Loop externo percorrendo a lista
     for (i = 0; i < lista->quantidade; i++, (*comparacoes)++)
     {
         (*copiasRealizadas)++;
@@ -377,6 +378,7 @@ void selectionSort(ListaClientes *lista, int* comparacoes, int* copiasRealizadas
         // Encontra o índice do menor elemento restante
         for (j = i + 1; j < lista->quantidade; j++, (*comparacoes)++)
         {
+            //Compara com a posicao atual da lista e guarda a posicao do menor
             (*comparacoes)++;
             if (lista->clientes[j].rg < lista->clientes[k].rg)
             {
@@ -404,12 +406,14 @@ void insertionSort(ListaClientes *lista, int* comparacoes, int* copiasRealizadas
     int i, j, k;
     Cliente temp;
 
+    //Loop externo percorrendo a lista
     for (i = 1; i < lista->quantidade; i++, (*comparacoes)++)
     {
+        //Loop que agrupa a lista em porções menores, começando o agrupamento com dois elementos, até o tamanho da lista (ordenar cartas do baralho)
         for(j = 0; j<i; j++, (*comparacoes)++)
         {
             (*comparacoes)++;
-            if(lista->clientes[j].rg > lista->clientes[i].rg)
+            if(lista->clientes[j].rg > lista->clientes[i].rg) //Faz a ordenação já encima do agrupamento alcançado
             {
                 (*copiasRealizadas) += 3;
                 temp = lista->clientes[j];
@@ -427,15 +431,19 @@ void bubbleSort(ListaClientes *lista, int* comparacoes, int* copiasRealizadas)
     Cliente temp;
     int flag = 1, i;
 
+    //Enqunto a lista tiver itens desordenados
     while(flag)
     {
         flag = 0;
+        //Loop que percorre a lista completa
         for (i = 0; i < lista->quantidade-1; i++, (*comparacoes)++)
         {
+            //Comparacao entre a posicao atual, e a próxima respectiva posição
             (*comparacoes)++;
             if(lista->clientes[i].rg > lista->clientes[i+1].rg)
             {
                 (*copiasRealizadas) += 3;
+                //Flag indicando que a lista ainda está sendo ordenada, caso essa flag nao seja ativada, indica que nenhum item mais foi ordenado
                 flag = 1;
                 temp = lista->clientes[i];
                 lista->clientes[i] = lista->clientes[i+1];
@@ -539,9 +547,10 @@ void quickSort(ListaClientes *lista, int iniVet, int fimVet, int* comparacoes, i
 void merge(ListaClientes *lista, int esquerda, int meio, int direita, int* comparacoes, int* copiasRealizadas)
 {
     ListaClientes *helper = (ListaClientes*)malloc(sizeof(ListaClientes));
-    helper->quantidade = direita - esquerda + 1; // Corrigindo a alocação de memória
+    helper->quantidade = direita - esquerda + 1;
     helper->clientes = (Cliente*)malloc(helper->quantidade * sizeof(Cliente));
 
+    //Fazendo uma cópia do vetor original para helper
     for (int i = 0; i < helper->quantidade; i++, (*comparacoes)++)
     {
         (*copiasRealizadas)++;
@@ -552,26 +561,28 @@ void merge(ListaClientes *lista, int esquerda, int meio, int direita, int* compa
     int i = 0, j = meio - esquerda + 1, k = esquerda;
 
     (*comparacoes)++;
+    //Comparacao enquanto o índice i nao chega até o meio e j no chega até o fim da lista analisada
     while (i <= meio - esquerda && j <= direita - esquerda)
     {
         (*comparacoes)++;
         (*comparacoes)++;
-        if (helper->clientes[i].rg <= helper->clientes[j].rg)
+        if (helper->clientes[i].rg <= helper->clientes[j].rg) //comparacao de qual posicao tem o menor elemento
         {
             (*copiasRealizadas)++;
-            lista->clientes[k] = helper->clientes[i];
-            i++;
+            lista->clientes[k] = helper->clientes[i]; //faz a troca no vetor original
+            i++; //anda posicao
         }
         else
         {
             (*copiasRealizadas)++;
-            lista->clientes[k] = helper->clientes[j];
-            j++;
+            lista->clientes[k] = helper->clientes[j]; //faz a troca no vetor original
+            j++; //anda posicao
         }
-        k++;
+        k++; //anda posicao no vetor original
     }
 
     (*comparacoes)++;
+    //Caso o vetor de posicoes j já tenha sido todo realocado na ordenação, preenche os restantes indices i
     while (i <= meio - esquerda)
     {
         (*comparacoes)++;
@@ -580,6 +591,7 @@ void merge(ListaClientes *lista, int esquerda, int meio, int direita, int* compa
         i++;
         k++;
     }
+    //Caso o vetor de posicoes i já tenha sido todo realocado na ordenação, preenche os restantes indices j
     (*comparacoes)++;
     while (j <= direita - esquerda)
     {
@@ -590,6 +602,7 @@ void merge(ListaClientes *lista, int esquerda, int meio, int direita, int* compa
         k++;
     }
 
+    //desalocacao do vetor copia
     free(helper->clientes);
     free(helper);
 }

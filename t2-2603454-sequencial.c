@@ -442,38 +442,13 @@ void insertionSort(ListaClientes *lista, int* comparacoes, int* copiasRealizadas
 		while (j > 0 && lista->clientes[j].rg < lista->clientes[j-1].rg) {
             (*comparacoes)++;
             (*copiasRealizadas)+=3;
-			int aux = lista->clientes[j].rg;
-			lista->clientes[j].rg = lista->clientes[j - 1].rg;
-			lista->clientes[j - 1].rg = aux;
+			Cliente aux = lista->clientes[j];
+			lista->clientes[j] = lista->clientes[j - 1];
+			lista->clientes[j - 1] = aux;
 			j -= 1;
 		}
 
 	}
-}
-
-void insertionSort2(ListaClientes *lista, int* comparacoes, int* copiasRealizadas)
-{
-    *comparacoes = 0;
-    *copiasRealizadas = 0;
-    int i, j, k;
-    Cliente temp;
-
-    //Loop externo percorrendo a lista
-    for (i = 1; i < lista->quantidade; i++, (*comparacoes)++)
-    {
-        //Loop que agrupa a lista em porções menores, começando o agrupamento com dois elementos, até o tamanho da lista (ordenar cartas do baralho)
-        for(j = 0; j<i; j++, (*comparacoes)++)
-        {
-            (*comparacoes)++;
-            if(lista->clientes[j].rg > lista->clientes[i].rg) //Faz a ordenação já encima do agrupamento alcançado
-            {
-                (*copiasRealizadas) += 3;
-                temp = lista->clientes[j];
-                lista->clientes[j] = lista->clientes[i];
-                lista->clientes[i] = temp;
-            }
-        }
-    }
 }
 
 void bubbleSort(ListaClientes *lista, int* comparacoes, int* copiasRealizadas)
@@ -806,7 +781,7 @@ int main()
                     break;
                 case 2:
                     inicio = clock();
-                    insertionSort2(lista, &comparacoes, &copiasRealizadas);
+                    insertionSort(lista, &comparacoes, &copiasRealizadas);
                     fim = clock();
                     tempoProcessamento = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
                     printf("\nC(n): %d, M(N) %d, Tempo: %f\n", comparacoes, copiasRealizadas, tempoProcessamento);
